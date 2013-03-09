@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = ">= 1.9.2"
+  s.required_ruby_version = ">= 2.0.0"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", "~> 2.12.0"
-  s.add_development_dependency "binding_of_caller"
+  s.add_development_dependency "binding_of_caller", ">= 0.7.1"
   s.add_development_dependency "pry"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "yard"
