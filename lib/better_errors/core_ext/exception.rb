@@ -1,21 +1,22 @@
-class Exception
-  original_initialize = instance_method(:initialize)
-  
-  if BetterErrors.binding_of_caller_available?
-    define_method :initialize do |*args|
-      unless Thread.current[:__better_errors_exception_lock]
+module BetterErrors::CoreExt
+  module Exception
+    prepend_features ::Exception
+
+    def initialize(*)
+      return if Thread.current[:__better_errors_exception_lock]
+      begin
         Thread.current[:__better_errors_exception_lock] = true
-        begin
+        if BetterErrors.binding_of_caller_available?
           @__better_errors_bindings_stack = binding.callers.drop(1)
-        ensure
-          Thread.current[:__better_errors_exception_lock] = false
         end
+        super
+      ensure
+        Thread.current[:__better_errors_exception_lock] = false
       end
-      original_initialize.bind(self).call(*args)
     end
-  end
   
-  def __better_errors_bindings_stack
-    @__better_errors_bindings_stack || []
+    def __better_errors_bindings_stack
+      @__better_errors_bindings_stack || []
+    end
   end
 end
